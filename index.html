@@ -681,12 +681,14 @@ function updateChart(ymd, label, monthsBack){
   const dates = cRows.map(r=>r.TIME);
   const values = cRows.map(r=>pNum(r.DATA_VALUE));
 
-  // 월말 마지막 데이터 인덱스 찾기
+  // 월말 마지막 실제 데이터 인덱스 찾기 (휴일이면 직전 영업일로 자동 적용됨)
   const monthLastIdx = {};
   dates.forEach((d,i)=>{
     const ym = d.slice(0,6);
-    monthLastIdx[ym] = i; // 덮어쓰면 자연스럽게 마지막 인덱스가 남음
+    monthLastIdx[ym] = i;
   });
+
+  // 현재 조회월 제외한 모든 월의 마지막 인덱스 표시
   const showIndices = new Set(Object.values(monthLastIdx));
 
   const gradient = ctx.createLinearGradient(0, 0, 0, canvas.clientHeight || 240);
@@ -748,7 +750,11 @@ function search(){
   const p = parseDateInput($("#dateInput").val());
   if(!p){ alert("조회일을 확인해주세요."); return; }
 
-  const startForFetch = p.ymd.slice(0,4) + "0101";
+  // 그래프용으로 최대 12개월치 + 연초 평균용 1월1일 중 더 이른 날짜로 fetch
+  const yearStart = p.ymd.slice(0,4) + "0101";
+  const d4 = new Date(p.y, p.m - 14, 1); // 12개월 전 1일
+  const fetch4Start = d4.getFullYear() + ("0"+(d4.getMonth()+1)).slice(-2) + "01";
+  const startForFetch = fetch4Start < yearStart ? fetch4Start : yearStart;
   const cacheKey = `rate_data_${startForFetch}_${p.ymd}`;
 
   setLoading(true);
