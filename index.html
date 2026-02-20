@@ -748,8 +748,8 @@ function search(){
   const p = parseDateInput($("#dateInput").val());
   if(!p){ alert("조회일을 확인해주세요."); return; }
 
-  // 직전 3개월 평균 계산 + 그래프용으로 조회일 기준 4개월 전 1일부터 fetch
-  const fetchStart = new Date(p.y, p.m - 5, 1); // 4개월 전 (여유분 1개월 포함)
+  // 6개월치 행 표시 + 직전 3개월 평균 계산을 위해 7개월 전부터 fetch
+  const fetchStart = new Date(p.y, p.m - 8, 1);
   const startForFetch = fetchStart.getFullYear() + ("0"+(fetchStart.getMonth()+1)).slice(-2) + "01";
   const cacheKey = `rate_data_${startForFetch}_${p.ymd}`;
 
