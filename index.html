@@ -125,7 +125,7 @@ button:disabled{ opacity:0.6; cursor:not-allowed; }
   height:100%;
   overflow:auto;
 }
-table{ width:100%; border-collapse:collapse; font-size:13px; }
+table{ width:100%; border-collapse:collapse; font-size:13px; table-layout:fixed; }
 th{
   position:sticky; top:0;
   background:var(--burgundy-light);
@@ -318,7 +318,7 @@ td.bold{font-weight:900;}
               <table id="supremaTable">
                 <thead>
                   <tr>
-                    <th style="width:90px;">월</th>
+                    <th>월</th>
                     <th>전월 평균</th>
                     <th>직전 3개월 평균</th>
                     <th>원가</th>
@@ -557,7 +557,7 @@ function calculateSuprema(){
   if(!p) return;
 
   $("#supremaTable thead tr").html(`
-    <th style="width:90px;">월</th>
+    <th>월</th>
     <th>전월 평균</th>
     <th>직전 3개월 평균</th>
     <th>원가</th>
