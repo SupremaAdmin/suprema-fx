@@ -501,44 +501,45 @@ function computeWonkaPanka(pavg, m3avg){
   return { wonka, panka };
 }
 
-// ✅ 수정 1: 당월 포함 6개월 평균 추가
-function buildSupremaFrom202507(baseYear, baseMonth, baseYmd){
+// 조회일 기준 당월 포함 직전 5개월 = 6개월치 행 표시
+function buildSuprema(baseYear, baseMonth){
   const usdRows = globalRows
     .filter(r => String(r.ITEM_NAME1 || "").includes("미국달러"))
     .sort((a,b)=>a.TIME.localeCompare(b.TIME));
 
   if(!usdRows.length) return [];
 
-  const months = listMonthsFrom(2025, 7, baseYear, baseMonth);
-  const list = [];
+  // 당월 포함 6개월치 목록
+  const months = [];
+  for(let i = 0; i < 6; i++){
+    let m = baseMonth - i;
+    let y = baseYear;
+    while(m <= 0){ m += 12; y--; }
+    months.push({ y, m });
+  }
 
+  const list = [];
   months.forEach(({y, m})=>{
-    const isCurrentMonth = (y === baseYear && m === baseMonth);
     const prevMonthStart = toYmd(new Date(y, m-2, 1));
     const prevMonthEnd   = toYmd(new Date(y, m-1, 0));
     const m3Start = toYmd(new Date(y, m-4, 1));
     const m3End   = prevMonthEnd;
-
-    // 당월 포함 6개월 평균: 당월 ~ 5개월 전 말일
-    const m6Start = toYmd(new Date(y, m-6, 1));
-    const m6End   = isCurrentMonth ? baseYmd : toYmd(new Date(y, m, 0));
-    const m6avg = calcAvg(usdRows, m6Start, m6End);
 
     const pavg = calcAvg(usdRows, prevMonthStart, prevMonthEnd);
     const m3avg = calcAvg(usdRows, m3Start, m3End);
     const { wonka, panka } = computeWonkaPanka(pavg, m3avg);
 
     const ym = `${y}${("0"+m).slice(-2)}`;
-    list.push({ ymLabel: ymToLabel(ym), pavg, m3avg, m6avg, wonka, panka });
+    list.push({ ymLabel: ymToLabel(ym), pavg, m3avg, wonka, panka });
   });
 
-  return list.reverse();
+  return list;
 }
 
 function renderSupremaTable(list){
   $("#supremaTbody").empty();
   if(!list.length){
-    $("#supremaTbody").append(`<tr><td colspan="6" style="padding:14px; color:#777;">표시할 데이터가 없습니다.</td></tr>`);
+    $("#supremaTbody").append(`<tr><td colspan="5" style="padding:14px; color:#777;">표시할 데이터가 없습니다.</td></tr>`);
     return;
   }
   list.forEach(r=>{
@@ -547,7 +548,6 @@ function renderSupremaTable(list){
         <td style="font-weight:900;">${r.ymLabel}</td>
         <td>${fNum(r.pavg)}</td>
         <td>${fNum(r.m3avg)}</td>
-        <td>${r.m6avg == null ? "-" : fNum(r.m6avg)}</td>
         <td style="font-weight:900;">${r.wonka == null ? "-" : fNum(r.wonka)}</td>
         <td style="font-weight:900;">${r.panka == null ? "-" : fNum(r.panka)}</td>
       </tr>
@@ -559,17 +559,15 @@ function calculateSuprema(){
   const p = parseDateInput($("#dateInput").val());
   if(!p) return;
 
-  // ✅ 수정 1: 헤더에 당월포함6개월 추가
   $("#supremaTable thead tr").html(`
     <th style="width:90px;">월</th>
     <th>전월 평균</th>
     <th>직전 3개월 평균</th>
-    <th>당월포함 6개월 평균</th>
     <th>원가</th>
     <th>판가</th>
   `);
 
-  const list = buildSupremaFrom202507(p.y, p.m, p.ymd);
+  const list = buildSuprema(p.y, p.m);
   renderSupremaTable(list);
 
   const latest = list[0];
@@ -816,15 +814,14 @@ function downloadExcel(){
   if(!p){ alert("조회일을 확인해주세요."); return; }
 
   const wb = XLSX.utils.book_new();
-  const list = buildSupremaFrom202507(p.y, p.m, p.ymd);
+  const list = buildSuprema(p.y, p.m);
 
-  const aoa = [["월","전월 평균","직전 3개월 평균","당월포함 6개월 평균","원가","판가"]];
+  const aoa = [["월","전월 평균","직전 3개월 평균","원가","판가"]];
   list.slice().reverse().forEach(r=>{
     aoa.push([
       r.ymLabel,
       (r.pavg == null ? "" : Number(r.pavg)),
       (r.m3avg == null ? "" : Number(r.m3avg)),
-      (r.m6avg == null ? "" : Number(r.m6avg)),
       (r.wonka == null ? "" : Number(r.wonka)),
       (r.panka == null ? "" : Number(r.panka)),
     ]);
