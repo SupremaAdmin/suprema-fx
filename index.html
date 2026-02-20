@@ -364,14 +364,9 @@ td.bold{font-weight:900;}
 
           <div class="chart-card">
             <div class="chart-head">
-              <div class="chart-title">환율 변동 그래프</div>
-              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <div class="chart-title">환율 변동 그래프 (직전 3개월)</div>
+              <div style="display:flex; gap:8px; align-items:center;">
                 <select id="chartCurrency" style="font-size:14px;"></select>
-                <select id="chartRange" style="font-size:14px;">
-                  <option value="3">최근 3개월</option>
-                  <option value="6">최근 6개월</option>
-                  <option value="12">최근 12개월</option>
-                </select>
               </div>
             </div>
 
@@ -436,10 +431,10 @@ function parseDateInput(val){
 function setLoading(on){
   if(on){
     $("#loadingOverlay").css("display","flex").attr("aria-hidden","false");
-    $("#btnSearch,#btnExcel,#dateInput,#chartCurrency,#chartRange").prop("disabled", true);
+    $("#btnSearch,#btnExcel,#dateInput,#chartCurrency").prop("disabled", true);
   }else{
     $("#loadingOverlay").hide().attr("aria-hidden","true");
-    $("#btnSearch,#btnExcel,#dateInput,#chartCurrency,#chartRange").prop("disabled", false);
+    $("#btnSearch,#btnExcel,#dateInput,#chartCurrency").prop("disabled", false);
   }
 }
 
@@ -741,7 +736,7 @@ function updateChart(ymd, label, monthsBack){
 function processResult(p){
   calculateSuprema();
   renderAllCurrencySummary(p.ymd, p.iso);
-  updateChart(p.ymd, $("#chartCurrency").val(), $("#chartRange").val());
+  updateChart(p.ymd, $("#chartCurrency").val(), 3);
 }
 
 function search(){
@@ -852,15 +847,14 @@ $("#dateInput").val(formatDateLocal(new Date()));
 
 CURRENCIES.forEach(c=>$("#chartCurrency").append(`<option value="${c.label}">${c.label}</option>`));
 $("#chartCurrency").val("USD (미국 달러)");
-$("#chartRange").val("3");
 
 $("#btnSearch").on("click", search);
 $("#btnExcel").on("click", downloadExcel);
 
-$("#chartCurrency, #chartRange").on("change", () => {
+$("#chartCurrency").on("change", () => {
   const p = parseDateInput($("#dateInput").val());
   if(!p) return;
-  updateChart(p.ymd, $("#chartCurrency").val(), $("#chartRange").val());
+  updateChart(p.ymd, $("#chartCurrency").val(), 3);
 });
 
 $("#dateInput").on("change", search);
