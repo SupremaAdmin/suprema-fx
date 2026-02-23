@@ -293,9 +293,13 @@ td.bold{font-weight:900;}
   .res-val { font-size: 20px; }
 
   /* 왼쪽 표 가로 스크롤 */
-  .table-zone { overflow-x: auto; }
-  table { font-size: 11px; min-width: 420px; }
+  .table-zone { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-scroll { overflow: visible; }
+  table { font-size: 11px; min-width: 480px; }
   th, td { padding: 7px 5px; white-space: nowrap; }
+
+  .res-val { font-size: 16px; }
+  .res-card { padding: 8px; gap: 8px; }
 
   /* 요약표 가로 스크롤 + 글자 자동 축소 */
   .summary-zone { overflow-x: auto; }
