@@ -788,18 +788,23 @@ function updateChart(ymd, label, monthsBack){
         legend:{ display:false },
         tooltip:{
           enabled: true,
-          intersect: false,
           mode: 'index',
-          backgroundColor: 'rgba(161,42,68,0.92)',
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          titleFont: { size: 12, weight: 'bold' },
+          intersect: false,
+          backgroundColor: 'rgba(255,255,255,0.95)',
+          borderColor: '#A12A44',
+          borderWidth: 1,
+          titleColor: '#333',
+          bodyColor: '#A12A44',
+          titleFont: { size: 13, weight: 'bold' },
           bodyFont: { size: 13, weight: 'bold' },
           padding: 10,
-          displayColors: false,
           callbacks:{
-            title: (items) => items[0].label,
-            label: (item) => item.parsed.y.toLocaleString() + ' 원'
+            title: function(items){
+              return dates[items[0].dataIndex];
+            },
+            label: function(item){
+              return ' ' + Number(item.raw).toLocaleString('ko-KR', {minimumFractionDigits:2, maximumFractionDigits:2});
+            }
           }
         }
       },
