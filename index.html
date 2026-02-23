@@ -293,9 +293,9 @@ td.bold{font-weight:900;}
   .res-val { font-size: 20px; }
 
   /* 왼쪽 표 가로 스크롤 */
-  .table-zone { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .table-scroll { overflow: visible; }
-  table { font-size: 11px; min-width: 480px; }
+  .table-zone { overflow-x: auto !important; overflow-y: visible !important; -webkit-overflow-scrolling: touch; }
+  .table-scroll { overflow: visible; height: auto; }
+  table { font-size: 11px; min-width: 480px; width: max-content; }
   th, td { padding: 7px 5px; white-space: nowrap; }
 
   .res-val { font-size: 16px; }
