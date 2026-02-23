@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>슈프리마 환율 통합 조회 시스템</title>
 
 <script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -280,7 +280,7 @@ td.bold{font-weight:900;}
   .header-title .title { font-size: 15px; }
   .header .source { font-size: 10px; margin-left: 0; width: 100%; }
 
-  .container { padding: 10px 0 14px; gap: 10px; }
+  .container { padding: 10px 0 14px; gap: 10px; width: 100%; }
 
   .top-nav { padding: 0 10px; gap: 8px; }
   input[type="date"] { font-size: 13px; padding: 6px 8px; }
@@ -297,10 +297,15 @@ td.bold{font-weight:900;}
   table { font-size: 11px; min-width: 420px; }
   th, td { padding: 7px 5px; white-space: nowrap; }
 
-  /* 요약표 가로 스크롤 */
+  /* 요약표 가로 스크롤 + 글자 자동 축소 */
   .summary-zone { overflow-x: auto; }
   #allSummaryTable { font-size: 11px; min-width: 560px; }
-  #allSummaryTable th, #allSummaryTable td { padding: 6px 5px; white-space: nowrap; }
+  #allSummaryTable th, #allSummaryTable td { 
+    padding: 6px 5px; 
+    white-space: normal;
+    word-break: keep-all;
+    font-size: clamp(9px, 1.8vw, 11px);
+  }
 
   .chart-container { height: 200px; }
 }
@@ -781,10 +786,12 @@ function search(){
   const p = parseDateInput($("#dateInput").val());
   if(!p){ alert("조회일을 확인해주세요."); return; }
 
-  // 6개월치 행 표시 + 직전 3개월 평균 계산을 위해 7개월 전부터 fetch
-  const fetchStart = new Date(p.y, p.m - 8, 1);
-  const startForFetch = fetchStart.getFullYear() + ("0"+(fetchStart.getMonth()+1)).slice(-2) + "01";
-  const cacheKey = `rate_data_${startForFetch}_${p.ymd}`;
+  // 항상 고정 start 사용 → Cloudflare 캐시 적중률 극대화
+  const today = new Date();
+  const fixedStart = new Date(today.getFullYear() - 1, today.getMonth(), 1);
+  const startForFetch = fixedStart.getFullYear() + ("0"+(fixedStart.getMonth()+1)).slice(-2) + "01";
+  const todayYmd = today.getFullYear() + ("0"+(today.getMonth()+1)).slice(-2) + ("0"+today.getDate()).slice(-2);
+  const cacheKey = `rate_data_${startForFetch}_${todayYmd}`;
 
   setLoading(true);
 
@@ -811,7 +818,7 @@ function search(){
   }
 
   $.ajax({
-    url: `${BACKEND}?start=${startForFetch}&end=${p.ymd}&callback=?`,
+    url: `${BACKEND}?start=${startForFetch}&end=${todayYmd}&callback=?`,
     dataType: "jsonp",
     timeout: 60000,
     success: function(data){
