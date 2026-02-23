@@ -803,7 +803,10 @@ function updateChart(ymd, label, monthsBack){
               return dates[items[0].dataIndex];
             },
             label: function(item){
-              return ' ' + Number(item.raw).toLocaleString('ko-KR', {minimumFractionDigits:2, maximumFractionDigits:2});
+              const v = parseFloat(item.raw);
+              const int = Math.floor(v).toLocaleString();
+              const dec = (v % 1).toFixed(2).slice(1);
+              return ' ' + int + dec;
             }
           }
         }
