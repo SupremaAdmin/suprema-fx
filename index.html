@@ -272,7 +272,7 @@ td.bold{font-weight:900;}
 @keyframes spin{ to{ transform:rotate(360deg);} }
 .loading-text{ font-weight:900; color:#444; font-size:14px; }
 @media (max-width: 768px) {
-  body { overflow: auto; min-width: 0; }
+  body { overflow-x: auto; min-width: 0; }
 
   .header {
     padding: 10px 14px;
@@ -296,9 +296,9 @@ td.bold{font-weight:900;}
   .res-val { font-size: 20px; }
 
   /* 왼쪽 표 가로 스크롤 */
-  .table-zone { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-zone { overflow: hidden; }
   .table-scroll { overflow: visible; height: auto; }
-  #supremaTable { font-size: 11px; min-width: 420px; }
+  #supremaTable { font-size: 11px; }
   #supremaTable th, #supremaTable td { padding: 7px 5px; white-space: nowrap; }
 
   .table-footnote { font-size: 9px !important; }
