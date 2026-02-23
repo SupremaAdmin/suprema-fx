@@ -806,7 +806,7 @@ function updateChart(ymd, label, monthsBack){
               const v = parseFloat(item.raw);
               const int = Math.floor(v).toLocaleString();
               const dec = (v % 1).toFixed(2).slice(1);
-              return ' ' + int + dec;
+              return ' ' + int + dec + ' 원';
             }
           }
         }
