@@ -1,0 +1,13 @@
+name: Warm Cloudflare Cache
+
+on:
+  schedule:
+    - cron: '0 19 * * *'  # 매일 UTC 19시 = 한국 새벽 4시
+
+jobs:
+  warm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Warm cache
+        run: |
+          curl "https://suprema-fx.jinsu.workers.dev?start=20240101&end=$(date +%Y%m%d)"
