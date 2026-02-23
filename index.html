@@ -286,18 +286,21 @@ td.bold{font-weight:900;}
   input[type="date"] { font-size: 13px; padding: 6px 8px; }
   button { font-size: 13px; padding: 7px 14px; }
 
-  .two-col {
-    grid-template-columns: 1fr;
-  }
+  .two-col { grid-template-columns: 1fr; }
 
   .card { padding: 12px 10px; }
   .section-title { font-size: 14px; }
-
   .res-val { font-size: 20px; }
 
-  table { font-size: 11px; }
-  th, td { padding: 7px 4px; }
-  #allSummaryTable th, #allSummaryTable td { font-size: 11px; padding: 7px 4px; }
+  /* 왼쪽 표 가로 스크롤 */
+  .table-zone { overflow-x: auto; }
+  table { font-size: 11px; min-width: 420px; }
+  th, td { padding: 7px 5px; white-space: nowrap; }
+
+  /* 요약표 가로 스크롤 */
+  .summary-zone { overflow-x: auto; }
+  #allSummaryTable { font-size: 11px; min-width: 560px; }
+  #allSummaryTable th, #allSummaryTable td { padding: 6px 5px; white-space: nowrap; }
 
   .chart-container { height: 200px; }
 }
