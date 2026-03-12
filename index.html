@@ -856,7 +856,7 @@ function search(){
 
   // 항상 고정 start 사용 → Cloudflare 캐시 적중률 극대화
   const today = new Date();
-  const fixedStart = new Date(today.getFullYear() - 1, today.getMonth(), 1);
+  const fixedStart = new Date(today.getFullYear() - 2, today.getMonth(), 1);
   const startForFetch = fixedStart.getFullYear() + ("0"+(fixedStart.getMonth()+1)).slice(-2) + "01";
   const todayYmd = today.getFullYear() + ("0"+(today.getMonth()+1)).slice(-2) + ("0"+today.getDate()).slice(-2);
   const cacheKey = `rate_data_${startForFetch}_${todayYmd}`;
