@@ -87,7 +87,7 @@ button:disabled{ opacity:0.6; cursor:not-allowed; }
 
 .two-col{
   display:grid;
-  grid-template-columns: 1fr 1.4fr;
+  grid-template-columns: 1.4fr 1fr;
   gap:12px;
   align-items:start;
 }
@@ -238,7 +238,7 @@ td.bold{font-weight:900;}
   color:#666;
 }
 .chart-container{
-  height:272.5px;
+  height:260px;
   position:relative;
 }
 #rateChart{ width:100%; height:100%; }
@@ -366,55 +366,7 @@ td.bold{font-weight:900;}
     <div class="two-col">
 
       <!-- LEFT -->
-      <div class="card">
-        <div class="section-title">※ 슈프리마 적용환율 상세 (USD)</div>
-
-        <div class="left-body">
-          <div class="res-card">
-            <div class="res-item">
-              <span class="res-label">원가</span>
-              <span id="resWonka" class="res-val">-</span>
-            </div>
-            <div class="res-divider"></div>
-            <div class="res-item">
-              <span class="res-label">판가</span>
-              <span id="resPanka" class="res-val">-</span>
-            </div>
-          </div>
-
-          <div class="table-zone">
-            <div class="table-scroll">
-              <table id="supremaTable">
-                <colgroup>
-                  <col style="width:18%">
-                  <col style="width:20%">
-                  <col style="width:22%">
-                  <col style="width:20%">
-                  <col style="width:20%">
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th>월</th>
-                    <th>전월 평균</th>
-                    <th>직전 3개월 평균</th>
-                    <th>원가</th>
-                    <th>판가</th>
-                  </tr>
-                </thead>
-                <tbody id="supremaTbody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="table-footnote">
-            <div><span class="dot">•</span>원가: 전월 평균과 직전 3개월 평균 중 큰 값</div>
-            <div><span class="dot">•</span>판가: 원가 - 50원</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="card">
+      <div class="card" style="align-self:stretch;">
         <div class="right-body">
 
           <div class="controls-row">
@@ -452,6 +404,55 @@ td.bold{font-weight:900;}
               <canvas id="rateChart"></canvas>
             </div>
           </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="card">
+        <div class="section-title">※ 슈프리마 적용환율 상세 (USD)</div>
+
+        <div class="left-body">
+          <div class="res-card">
+            <div class="res-item">
+              <span class="res-label">원가</span>
+              <span id="resWonka" class="res-val">-</span>
+            </div>
+            <div class="res-divider"></div>
+            <div class="res-item">
+              <span class="res-label">판가</span>
+              <span id="resPanka" class="res-val">-</span>
+            </div>
+          </div>
+          <div style="text-align:right; font-size:9pt; font-weight:800; color:#777; line-height:1.6; margin-bottom:6px;">
+            <span style="color:#A12A44; font-weight:900; margin-right:3px;">•</span>원가: 전월 평균과 직전 3개월 평균 중 큰 값<br>
+            <span style="color:#A12A44; font-weight:900; margin-right:3px;">•</span>판가: 원가 - 50원
+          </div>
+
+          <div class="table-zone">
+            <div class="table-scroll">
+              <table id="supremaTable">
+                <colgroup>
+                  <col style="width:18%">
+                  <col style="width:20%">
+                  <col style="width:22%">
+                  <col style="width:20%">
+                  <col style="width:20%">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>월</th>
+                    <th>전월 평균</th>
+                    <th>직전 3개월 평균</th>
+                    <th>원가</th>
+                    <th>판가</th>
+                  </tr>
+                </thead>
+                <tbody id="supremaTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
 
         </div>
       </div>
@@ -574,7 +575,7 @@ function computeWonkaPanka(pavg, m3avg){
   return { wonka, panka };
 }
 
-// 조회일 기준 당월 포함 직전 5개월 = 6개월치 행 표시
+// 조회일 기준 당월 포함 직전 11개월 = 12개월치 행 표시
 function buildSuprema(baseYear, baseMonth){
   const usdRows = globalRows
     .filter(r => String(r.ITEM_NAME1 || "").includes("미국달러"))
@@ -582,7 +583,7 @@ function buildSuprema(baseYear, baseMonth){
 
   if(!usdRows.length) return [];
 
-  // 당월 포함 6개월치 목록
+  // 당월 포함 12개월치 목록
   const months = [];
   for(let i = 0; i < 12; i++){
     let m = baseMonth - i;
@@ -626,6 +627,7 @@ function renderSupremaTable(list){
       </tr>
     `);
   });
+
 }
 
 function calculateSuprema(){
